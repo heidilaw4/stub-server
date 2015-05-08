@@ -1,0 +1,18 @@
+{
+    "/" : {
+        "response" : "examples/index.html",
+        "file" : true,
+        "contentType": "text/plain"
+    },
+
+    "/path1": {
+        "response" : {
+            "one": 1
+        },
+        "query" : {
+            "q1": true,
+            "q2": "v1"
+        },
+        "method": "get"
+    }
+}
