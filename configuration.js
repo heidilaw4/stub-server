@@ -1,18 +1,19 @@
 var fs = require('fs');
 
-var server;
-var stubs;
-
+var server = {};
+var stubs = {};
+var Deferred = require('./deferred').Deferred;
+var deferred = new Deferred();
 
 exports.setConfig = function(config) {
     var stubsPath;
-
+//TODO: check all the errors;
 
     if(!config || !config.stubs) {
         throw Error("Wrong configuration");
     }
 
-    server = config.server;
+    server = config.server || {};
 
     if(typeof config.stubs === 'string') {
 
@@ -38,9 +39,14 @@ exports.setConfig = function(config) {
     } else {
         throw Error("Wrong stubs type");
     }
+
+    deferred.resolve({
+        server: server,
+        stubs: stubs
+    });
+
 };
 
-exports.config = {
-    stubs: stubs,
-    server: server
+exports.getConfig = function () {
+    return deferred;
 };
