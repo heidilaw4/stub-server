@@ -1,0 +1,29 @@
+{
+  "name": "stub-server",
+  "version": "0.1.0",
+  "description": "Stub server which do response depends on json configuration file",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "dependencies": {
+    "mime": "^1.3.4",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/semykin/stub-server.git"
+  },
+  "keywords": ["stub", "server", "mock", "stub-serve", "mock-server", "fake", "response"],
+  "author": "Vitalii Semykin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/semykin/stub-server/issues"
+  },
+  "homepage": "https://github.com/semykin/stub-server"
+}

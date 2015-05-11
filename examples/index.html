@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('a').click(function (e) {
+                var data = e.target.className === 'post3' ?
+                        'data' :
+                {
+                    json: 'data'
+                };
+
+
+                if(e.target.className === 'post4') {
+
+                    return $.ajax({
+                        url : '/post',
+                        method: 'post'
+                    }).done(function(data){
+                        console.log(data);
+                    });
+                }
+
+                if (e.target.className === 'post2') {
+                    data = {
+                        json: 'data',
+                        foo: 'bar'
+                    }
+                }
+
+                $.ajax({
+                    url : '/post',
+                    data: data,
+                    method: 'post'
+                }).done(function(data){
+                    console.log(data);
+                });
+            })
+        });
+    </script>
+</head>
+<body>
+    <h1>I'm awesome</h1>
+    <a class="post1" href="#">go post 1</a><br/>
+    <a class="post2" href="#">go post 2</a><br/>
+    <a class="post3" href="#">go post 3</a><br/>
+    <a class="post4" href="#">go post 4</a><br/>
+</body>
+</html>

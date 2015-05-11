@@ -1,0 +1,45 @@
+[
+    {
+        "url": "/",
+        "response": "examples/index.html",
+        "file": true
+    },
+    {
+        "url": "/post",
+        "response": {
+            "one": 1
+        },
+        "method": "post",
+        "data": {
+            "json": "data"
+        },
+        "strictData": false
+    }, {
+        "url": "/post",
+        "response": {
+            "one": 2
+        },
+        "method": "post",
+        "data": {
+            "json": "data",
+            "foo": "bar",
+            "bar": "foo"
+        },
+        "strictData": false
+    },
+    {
+        "url": "/post",
+        "response": {
+            "one": 3
+        },
+        "method": "post",
+        "data": "data"
+    },
+    {
+        "url": "/post",
+        "response": {
+            "one": 4
+        },
+        "method": "post"
+    }
+]
