@@ -2,7 +2,7 @@ var fs = require('fs');
 
 var server = {};
 var stubs = {};
-var Deferred = require('./deferred').Deferred;
+var Deferred = require('./deferred');
 var deferred = new Deferred();
 
 exports.setConfig = function(config) {

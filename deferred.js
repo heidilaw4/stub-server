@@ -22,7 +22,8 @@ Deferred.prototype = {
         this.callbacks.forEach(function (callback) {
             callback(data);
         });
+        return this;
     }
 };
 
-exports.Deferred = Deferred;
+module.exports = Deferred;

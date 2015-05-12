@@ -1,95 +1,103 @@
 var configuration = require('./configuration'),
-    deferred = require('./deferred'),
     url = require('url'),
+    Method = require('./methods'),
+    Deferred = require('./deferred'),
     _ = require('underscore'),
-    fs = require('fs'),
-    mime = require('mime');
+    qs = require('querystring');
 
-var stubs,
-    stub,
-    response = {},
-    params;
-
-exports.getResponse = function (req) {
-    var d = new deferred.Deferred(),
-        parsedUrl = url.parse(req.url, true);
-    params = {
-        url: parsedUrl.pathname,
-        method: req.method.toLowerCase(),
-        query: parsedUrl.query
-    };
-
+function Router(req, res) {
+    this.req = req;
     configuration.getConfig().done(function (config) {
-        stubs = config.stubs;
-        d.resolve(getResponse());
-    });
-    return d;
+        this.stubs = config.stubs;
+    }.bind(this));
+    this.filteredStubs = [];
+    this.stubResponse = new Deferred();
+    this.parseRequest();
+    this.filterStubsByUrl();
+    this.getAppropriateStub().done(this.getStubResponse.bind(this));
+}
+
+Router.prototype = {
+    getResponse: function () {
+        return this.stubResponse;
+    },
+
+    parseRequest: function () {
+        this.url = url.parse(this.req.url, true);
+        this.method = new Method(this.req.method, this.req);
+    },
+
+    getStubResponse: function (stub) {
+        this.method.getResponse(stub).done(function (stubResp) {
+            this.stubResponse.resolve(stubResp);
+        }.bind(this));
+    },
+
+    filterStubsByUrl: function () {
+        this.filteredStubs = _.filter(this.stubs, {url : this.url.pathname});
+    },
+
+    getAppropriateStub: function () {
+        var deferred = new Deferred();
+        if(!this.filteredStubs.length) {
+            throw Error('No appropriate stub');
+        } else if(this.filteredStubs.length === 1) {
+            deferred.resolve(this.filteredStubs[0]);
+        } else {
+            this.method.getRequestData(this.req).done(function (data) {
+                var stub = this.getStubByData(data);
+                if(!stub) {
+                    throw Error('No stub with such data');
+                }
+                deferred.resolve(stub);
+            }.bind(this));
+        }
+        return deferred;
+    },
+
+    getStubByData: function (data) {
+        var parsedData = qs.parse(data),
+            stub;
+
+        parsedData = parsedData.data === '' ? data :  parsedData;
+        parsedData = _.isEmpty(parsedData)? undefined: parsedData;
+
+        stub = _.find(this.filteredStubs, function (stub) {
+            return _.isEqual(stub.data, parsedData);
+        });
+
+        if(!stub && _.isObject(parsedData)) {
+            stub = this.getNotStrictStub(parsedData);
+        }
+        return stub;
+    },
+
+    getNotStrictStub: function (data) {
+        var priorities = [],
+            keys = _.keys(data),
+            maxIndex,
+            notStrictStubs = _.filter(this.filteredStubs, {strictData: false}),
+            maxValue;
+
+        _.each(notStrictStubs, function (stub) {
+            var priority = 0;
+            if(_.isObject(stub.data)) {
+                _.each(keys, function (key) {
+                    if(stub.data[key] === data[key]) {
+                        priority++;
+                    }
+                });
+            }
+            priorities.push(priority);
+        });
+        maxValue = Math.max.apply(Math, priorities);
+        if(!maxValue) {
+            return undefined;
+        }
+        maxIndex = priorities.indexOf(maxValue);
+        return notStrictStubs[maxIndex];
+    }
 };
 
 
-function getResponse() {
-    response = {};
-    stub = stubs[params.url];
-    if(stub) {
-        response.status = params.status || 200;
-        response.contentType = params.contentType || 'application/json';
-        if(_.isArray(stubs[params.url])) {
-            //TODO: find proper response
-        } else if (_.isObject(stub)) {
-            compareRequestAndStub();
-        } else {
-            response.body = stub;
-        }
-
-    } else {
-        getErrorResponse();
-    }
-    return response;
-}
-
-
-function getResponseBody() {
-    if(stub.file) {
-        response.body = fs.readFileSync(stub.response);
-        response.contentType = mime.lookup(stub.response);
-    } else {
-        if(_.isObject(stub.response)) {
-            try {
-                response.body = JSON.stringify(stub.response);
-            } catch(e) {
-                response = getErrorResponse("Wrong json format");
-            }
-        } else {
-            response.body = stub.response;
-        }
-    }
-}
-
-function getErrorResponse(msg, status){
-    response = {
-        status: status || 400,
-        contentType: 'text/plain',
-        body: msg
-    }
-}
-
-function compareRequestAndStub() {
-    var correctQueries = false;
-    if(stub.method && params.method !== stub.method.toLowerCase()){
-        getErrorResponse("Incorrect request method");
-    } else {
-        if(!_.isEmpty(params.query)) {
-            _.every(params.query, function (value, key) {
-                if(stub.query[key] === true) {
-                    correctQueries = true;
-                } else {
-                    correctQueries = stub.query[key] === value;
-                }
-                return correctQueries;
-            });
-            correctQueries ? getResponseBody() : getErrorResponse("Incorrect query params");
-        } else {
-            getResponseBody()
-        }
-    }
-}
+module.exports = Router;
