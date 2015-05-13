@@ -4,24 +4,27 @@ var http = require('http'),
     _ = require('underscore'),
     log = require('./logger');
 
+function requestHandler(req, res, next) {
+    next = next || _.noop;
+    
+    var router = new Router(req, res);
+    router.getResponse()
+            .done(function (stub) {
+                console.log(stub);
+                res.writeHead(stub.statusCode, stub.contentType);
+                stub.headers.forEach(function (header) {
+                    res.setHeader(header.name, header.value);
+                });
+                res.end(stub.body);
+            })
+            .failed(function () {
+
+            });
+}
+
 exports.run = function () {
     configuration.getConfig().done(function (config) {
-        http.createServer(function (req, res) {
-            var router = new Router(req, res);
-            router.getResponse()
-                    .done(function (stub) {
-                        if(stub) {
-                            res.writeHead(stub.statusCode, stub.contentType);
-                            stub.headers.forEach(function (header) {
-                                res.setHeader(header.name, header.value);
-                            });
-                            res.end(stub.body);
-                        }
-                    })
-                    .failed(function () {
-
-                    });
-        }).listen(config.server.port || 9000);
+        http.createServer(requestHandler).listen(config.server.port || 9000);
         log.info('Server started at port: %d;', config.server.port);
     });
 };
@@ -29,3 +32,5 @@ exports.run = function () {
 exports.stop = function (callback) {
     http.close(callback || _.noop);
 };
+
+exports.requestHandler = requestHandler;

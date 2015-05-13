@@ -4,3 +4,5 @@ var config = require('./configuration'),
 exports.config = config.setConfig;
 
 exports.run = server.run;
+
+exports.requestHanlder = server.requestHandler;

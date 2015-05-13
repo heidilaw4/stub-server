@@ -6,11 +6,6 @@
     },
     {
         "url": "/post",
-        "response": "string",
-        "method": "post"
-    },
-    {
-        "url": "/post",
         "response": "examples/config.json",
         "method": "post",
         "file": true
