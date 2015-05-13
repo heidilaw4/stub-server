@@ -10,7 +10,6 @@ function requestHandler(req, res, next) {
     var router = new Router(req, res);
     router.getResponse()
             .done(function (stub) {
-                console.log(stub);
                 res.writeHead(stub.statusCode, stub.contentType);
                 stub.headers.forEach(function (header) {
                     res.setHeader(header.name, header.value);
