@@ -18,7 +18,7 @@ function requestHandler(req, res, next) {
                 res.end(stub.body);
             })
             .failed(function () {
-
+                next();
             });
 }
 
