@@ -1,7 +1,8 @@
 var Get = require('./get'),
     Post = require('./post'),
     Put = require('./put'),
-    Delete = require('./delete');
+    Delete = require('./delete'),
+    log = require('./../logger');
 
 function Method(methodName, req) {
     switch (methodName.toLowerCase()) {
@@ -14,7 +15,7 @@ function Method(methodName, req) {
         case 'delete':
             return new Delete(req);
         default:
-            throw Error('Method ' + methodName + ' is not supported');
+            log.warn('Method ' + methodName + ' is not supported');
     }
 }
 module.exports = Method;

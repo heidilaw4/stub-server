@@ -6,32 +6,19 @@
     },
     {
         "url": "/post",
-        "response": {
-            "one": 1
-        },
-        "method": "post",
-        "data": {
-            "json": "data"
-        },
-        "strictData": false
-    }, {
-        "url": "/post",
-        "response": {
-            "one": 2
-        },
-        "method": "post",
-        "data": {
-            "json": "data",
-            "foo": "bar",
-            "bar": "foo"
-        },
-        "strictData": false
+        "response": "string",
+        "method": "post"
     },
     {
         "url": "/post",
-        "response": {
-            "one": 3
-        },
+        "response": "examples/config.json",
+        "method": "post",
+        "file": true
+    },
+    {
+        "url": "/post",
+        "response": "examples/config.json",
+        "file": true,
         "method": "post",
         "data": "data"
     },

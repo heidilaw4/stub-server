@@ -7,6 +7,7 @@
     "example": "examples"
   },
   "dependencies": {
+    "log4js": "^0.6.25",
     "mime": "^1.3.4",
     "underscore": "^1.8.3"
   },
@@ -19,7 +20,15 @@
     "type": "git",
     "url": "https://github.com/semykin/stub-server.git"
   },
-  "keywords": ["stub", "server", "mock", "stub-serve", "mock-server", "fake", "response"],
+  "keywords": [
+    "stub",
+    "server",
+    "mock",
+    "stub-serve",
+    "mock-server",
+    "fake",
+    "response"
+  ],
   "author": "Vitalii Semykin",
   "license": "ISC",
   "bugs": {

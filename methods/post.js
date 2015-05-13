@@ -19,7 +19,6 @@ _.extend(Post.prototype, {
         req.on('end', function() {
             deferred.resolve(data);
         });
-        //TODO: add logging data
 
         return deferred;
     }

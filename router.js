@@ -3,7 +3,8 @@ var configuration = require('./configuration'),
     Method = require('./methods'),
     Deferred = require('./deferred'),
     _ = require('underscore'),
-    qs = require('querystring');
+    qs = require('querystring'),
+    log = require('./logger');
 
 function Router(req, res) {
     this.req = req;
@@ -14,7 +15,11 @@ function Router(req, res) {
     this.stubResponse = new Deferred();
     this.parseRequest();
     this.filterStubsByUrl();
-    this.getAppropriateStub().done(this.getStubResponse.bind(this));
+    this.getAppropriateStub()
+            .done(this.getStubResponse.bind(this))
+            .failed(function () {
+                this.stubResponse.reject();
+            }.bind(this));
 }
 
 Router.prototype = {
@@ -25,12 +30,25 @@ Router.prototype = {
     parseRequest: function () {
         this.url = url.parse(this.req.url, true);
         this.method = new Method(this.req.method, this.req);
+
+        log.info('%s : %s', this.req.method.toUpperCase(), this.url.path);
     },
 
     getStubResponse: function (stub) {
-        this.method.getResponse(stub).done(function (stubResp) {
-            this.stubResponse.resolve(stubResp);
-        }.bind(this));
+        this.method.getResponse(stub)
+                .done(function (stubResp) {
+                    if(stubResp) {
+                        this.stubResponse.resolve(stubResp);
+                        log.info('Stub response for \"%s\" succeed', this.url.path);
+                    } else {
+                        this.stubResponse.reject();
+                        log.warn('Stub response for \"%s\" failed', this.url.path);
+                    }
+                }.bind(this))
+                .failed(function () {
+                    this.stubResponse.reject();
+                    log.warn('Stub response for \"%s\" failed', this.url.path);
+                }.bind(this));
     },
 
     filterStubsByUrl: function () {
@@ -40,16 +58,19 @@ Router.prototype = {
     getAppropriateStub: function () {
         var deferred = new Deferred();
         if(!this.filteredStubs.length) {
-            throw Error('No appropriate stub');
+            log.warn('No appropriate stub for %s : %s', this.req.method.toUpperCase(), this.url.path);
+            deferred.reject();
         } else if(this.filteredStubs.length === 1) {
             deferred.resolve(this.filteredStubs[0]);
         } else {
             this.method.getRequestData(this.req).done(function (data) {
                 var stub = this.getStubByData(data);
                 if(!stub) {
-                    throw Error('No stub with such data');
+                    log.warn('No stub with such request data  for %s : %s', this.req.method.toUpperCase(), this.url.path);
+                    deferred.reject();
+                } else {
+                    deferred.resolve(stub);
                 }
-                deferred.resolve(stub);
             }.bind(this));
         }
         return deferred;
@@ -58,7 +79,6 @@ Router.prototype = {
     getStubByData: function (data) {
         var parsedData = qs.parse(data),
             stub;
-
         parsedData = parsedData.data === '' ? data :  parsedData;
         parsedData = _.isEmpty(parsedData)? undefined: parsedData;
 

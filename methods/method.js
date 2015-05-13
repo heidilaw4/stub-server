@@ -2,7 +2,8 @@ var Response = require('./../response'),
     Deferred = require('./../deferred'),
     mime = require('mime'),
     _ = require('underscore'),
-    fs = require('fs');
+    fs = require('fs'),
+    log = require('./../logger');
 
 function Method() {
     this.response = new Deferred();
@@ -22,9 +23,13 @@ Method.prototype = {
         this.getStubHeaders();
         this.getStatusCode();
         this.getContentType();
-        this.getStubBody().done(function () {
-            this.response.resolve(this.stubResponse);
-        }.bind(this));
+        this.getStubBody()
+                .done(function () {
+                    this.response.resolve(this.stubResponse);
+                }.bind(this))
+                .failed(function () {
+                    this.response.reject();
+                }.bind(this));
     },
 
     getStubBody: function () {
@@ -36,16 +41,22 @@ Method.prototype = {
                 this.stubResponse.body = JSON.stringify(response);
                 deferred.resolve();
             } catch (e) {
-                throw Error('Wrong JSON response format');
+                log.error('Wrong JSON response format');
+                this.stubResponse = null;
+                return deferred.reject();
             }
         } else if(this.stub.file && _.isString(response)) {
             try {
                 fileStat = fs.statSync(this.stub.response);
             } catch (e) {
-                throw e;
+                log.error(e.message);
+                this.stubResponse = null;
+                return deferred.reject();
             }
             if(!fileStat.isFile()) {
-                throw Error('Response should be a file');
+                log.error('Response should be a file');
+                this.stubResponse = null;
+                return deferred.reject();
             }
             fs.readFile(this.stub.response, function (err, data) {
                 this.stubResponse.body = data;
