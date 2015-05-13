@@ -2,6 +2,7 @@ function Deferred(){
     this.callbacks = [];
     this.errorCallbacks = [];
     this.resolved = false;
+    this.rejected = false;
     this.response = '';
 }
 
@@ -15,6 +16,7 @@ Deferred.prototype = {
         if(this.resolved) {
             callback(this.response);
         }
+        return this;
     },
 
     resolve: function(data){
@@ -32,13 +34,14 @@ Deferred.prototype = {
         }
         else throw 'Callback should be a func';
 
-        if(this.resolved) {
+        if(this.rejected) {
             callback(this.response);
         }
+        return this;
     },
 
     reject: function(data){
-        this.resolved = true;
+        this.rejected = true;
         this.response = data;
         this.errorCallbacks.forEach(function (callback) {
             callback(data);

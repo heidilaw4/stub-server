@@ -17,7 +17,7 @@
     },
     {
         "url": "/post",
-        "response": "examples/config.json",
+        "response": "examples/config1.json",
         "file": true,
         "method": "post",
         "data": "data"
