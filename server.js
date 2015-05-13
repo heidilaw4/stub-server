@@ -6,7 +6,7 @@ var http = require('http'),
 
 function requestHandler(req, res, next) {
     next = next || _.noop;
-    
+
     var router = new Router(req, res);
     router.getResponse()
             .done(function (stub) {
@@ -25,7 +25,7 @@ function requestHandler(req, res, next) {
 exports.run = function () {
     configuration.getConfig().done(function (config) {
         http.createServer(requestHandler).listen(config.server.port || 9000);
-        log.info('Server started at port: %d;', config.server.port);
+        log.info('Server started at port: %d;', config.server.port || 9000);
     });
 };
 
