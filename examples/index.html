@@ -7,33 +7,12 @@
     <script>
         $(document).ready(function () {
             $('a').click(function (e) {
-                var data = e.target.className === 'post3' ?
-                        'data' :
-                {
-                    json: 'data'
-                };
-
-
-                if(e.target.className === 'post4') {
-
-                    return $.ajax({
-                        url : '/post',
-                        method: 'post'
-                    }).done(function(data){
-                        console.log(data);
-                    });
-                }
-
-                if (e.target.className === 'post2') {
-                    data = {
-                        json: 'data',
-                        foo: 'bar'
-                    }
-                }
 
                 $.ajax({
                     url : '/post',
-                    data: data,
+                    data: {
+                        data: 12
+                    },
                     method: 'post'
                 }).done(function(data){
                     console.log(data);

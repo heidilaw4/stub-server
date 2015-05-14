@@ -6,20 +6,13 @@
     },
     {
         "url": "/post",
-        "response": "examples/config.json",
-        "file": true
-    },
-    {
-        "url": "/post",
-        "response": "examples/config1.json",
-        "file": true,
-        "data": "data"
-    },
-    {
-        "url": "/post",
         "response": {
             "one": 4
         },
+        "data": {
+            "data": "1"
+        },
+        "strictData": false,
         "method": "post"
     }
 ]

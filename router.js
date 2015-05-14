@@ -65,7 +65,20 @@ Router.prototype = {
             log.warn('No appropriate stub for %s : %s', this.req.method.toUpperCase(), this.url.path);
             deferred.reject();
         } else if(this.filteredStubs.length === 1) {
-            deferred.resolve(this.filteredStubs[0]);
+            var stub = this.filteredStubs[0];
+            if(!stub.data || this.req.method.ignoreCase('get')){
+                deferred.resolve(stub);
+            } else {
+                this.method.getRequestData(this.req).done(function (data) {
+                    var stub = this.getStubByData(data);
+                    if(!stub) {
+                        log.warn('No stub without data  for %s : %s', this.req.method.toUpperCase(), this.url.path);
+                        deferred.reject();
+                    } else {
+                        deferred.resolve(stub);
+                    }
+                }.bind(this));
+            }
         } else {
             this.method.getRequestData(this.req).done(function (data) {
                 var stub = this.getStubByData(data);
