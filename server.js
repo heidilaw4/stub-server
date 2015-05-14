@@ -5,7 +5,7 @@ var http = require('http'),
     log = require('./logger');
 
 function requestHandler(req, res, next) {
-    next = next || _.noop;
+    next = next || notFound(res);
 
     var router = new Router(req, res);
     router.getResponse()
@@ -21,6 +21,12 @@ function requestHandler(req, res, next) {
             });
 }
 
+function notFound(res) {
+    return function(){
+        res.statusCode = 400;
+        res.end();
+    }
+}
 exports.run = function () {
     configuration.getConfig().done(function (config) {
         http.createServer(requestHandler).listen(config.server.port || 9000);

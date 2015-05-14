@@ -4,7 +4,8 @@ var configuration = require('./configuration'),
     Deferred = require('./deferred'),
     _ = require('underscore'),
     qs = require('querystring'),
-    log = require('./logger');
+    log = require('./logger'),
+    utils = require('./utils');
 
 function Router(req, res) {
     this.req = req;
@@ -14,7 +15,7 @@ function Router(req, res) {
     this.filteredStubs = [];
     this.stubResponse = new Deferred();
     this.parseRequest();
-    this.filterStubsByUrl();
+    this.filterStubsByUrlAndMethod();
     this.getAppropriateStub()
             .done(this.getStubResponse.bind(this))
             .failed(function () {
@@ -51,8 +52,11 @@ Router.prototype = {
                 }.bind(this));
     },
 
-    filterStubsByUrl: function () {
-        this.filteredStubs = _.filter(this.stubs, {url : this.url.pathname});
+    filterStubsByUrlAndMethod: function () {
+        this.filteredStubs = _.filter(this.stubs, function (stub) {
+            stub.method = stub.method || 'get';
+            return this.url.pathname === stub.url && this.req.method.ignoreCase(stub.method);
+        }.bind(this));
     },
 
     getAppropriateStub: function () {

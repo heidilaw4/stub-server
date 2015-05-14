@@ -7,14 +7,12 @@
     {
         "url": "/post",
         "response": "examples/config.json",
-        "method": "post",
         "file": true
     },
     {
         "url": "/post",
         "response": "examples/config1.json",
         "file": true,
-        "method": "post",
         "data": "data"
     },
     {
