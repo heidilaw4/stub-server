@@ -3,7 +3,9 @@ Simple configuration format (JSON), responses can be in different files and type
 
 #Installation
 
+````
 npm i stub-server
+````
 
 #Usage
 
@@ -46,25 +48,25 @@ config.stub - array with requests.
 
 Stub configuration:
 
-request - request path [required]
+*request* - request path [required]
 
-response - response for this stub, can be a string, JSON, object, path to file [required]
+*response* - response for this stub, can be a string, JSON, object, path to file [required]
 
-file (true/false) - if it's true, and response is path to file, stub server return response file data with correct mime type.
+*file (true/false)* - if it's true, and response is path to file, stub server return response file data with correct mime type.
 
-strictData (if method is 'get' ignored, default false) - if true stub server select response with most appropriate data
+*strictData (if method is 'get' ignored, default false)* - if true stub server select response with most appropriate data
 
-data - response data in object format
+*data* - response data in object format
 
-headers (array) - add this headers to response
+*headers (array)* - add this headers to response
 
 #Contributing
 
+You are welcome :)
+
 If you find bug or want some changes, please, create an [issue](https://github.com/semykin/stub-server/issues)
 
-My [email](v.v.semykin@gmail.com)
-
-You are welcome :)
+v.v.semykin@gmail.com - is my own email. Commits are also from work emails, that can be blocked :)
 
 #License
 
