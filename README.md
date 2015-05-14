@@ -47,10 +47,15 @@ config.stub - array with requests.
 Stub configuration:
 
 request - request path [required]
+
 response - response for this stub, can be a string, JSON, object, path to file [required]
+
 file (true/false) - if it's true, and response is path to file, stub server return response file data with correct mime type.
+
 strictData (if method is 'get' ignored, default false) - if true stub server select response with most appropriate data
+
 data - response data in object format
+
 headers (array) - add this headers to response
 
 #Contributing
