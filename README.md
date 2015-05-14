@@ -60,6 +60,10 @@ headers (array) - add this headers to response
 
 #Contributing
 
+If you find bug or want some changes, please, create an [issue](https://github.com/semykin/stub-server/issues)
+
+My [email](v.v.semykin@gmail.com)
+
 You are welcome :)
 
 #License
