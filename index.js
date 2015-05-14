@@ -1,5 +1,5 @@
-var config = require('./configuration'),
-    server = require('./server');
+var config = require('./lib/configuration'),
+    server = require('./lib/server');
 
 exports.config = config.setConfig;
 
