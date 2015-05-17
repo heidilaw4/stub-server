@@ -10,10 +10,7 @@ module.exports = function (grunt) {
         watch: {
             tests: {
                 files: ['tests/**/*.js'],
-                tasks: ['mochaTest'],
-                options: {
-                    spawn: false
-                }
+                tasks: ['mochaTest']
             }
         },
 
