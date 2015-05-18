@@ -7,15 +7,16 @@
     <script>
         $(document).ready(function () {
             $('a').click(function (e) {
-
+                var defaultData = {
+                    id: null,
+                    action: ""
+                };
                 $.ajax({
-                    url : '/post',
-                    data: {
-                        data: 1
-                    },
+                    url: '/post',
+                    data: JSON.stringify(defaultData),
+                    processData: false,
+                    dataType: 'json',
                     method: 'post'
-                }).done(function(data){
-                    console.log(data);
                 });
             })
         });

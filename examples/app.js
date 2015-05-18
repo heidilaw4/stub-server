@@ -3,7 +3,7 @@ var stubServer = require('./../index');
 stubServer.config({
     stubs: 'examples/config.json',
     server: {
-        port: 9000
+        port: 9001
     }
 });
 
