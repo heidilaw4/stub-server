@@ -2,7 +2,11 @@
     {
         "url": "/",
         "response": "examples/index.html",
-        "file": true
+        "file": true,
+        "headers": [{
+            "name": "headerName",
+            "value": "headerValue"
+        }]
     },
     {
         "url": "/post",
