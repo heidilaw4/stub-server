@@ -40,25 +40,25 @@ Other usage examples are [here](https://github.com/semykin/stub-server/tree/mast
 
 config  - method that configure stub server with server params and stubs. It can be a string value (path to configuration JSON file) and a js object.
 
-config.server - configuration for node.js server, that will be started.
+  - config.server - configuration for node.js server, that will be started.
 
-port - port for stub server, default 9000
+      - port - port for stub server, default 9000
     
-config.stub - array with requests. 
+  - config.stub - array with requests.
 
 Stub configuration:
 
-*request* - request path [required]
+  - *request* - request path [required]
 
-*response* - response for this stub, can be a string, JSON, object, path to file [required]
+  - *response* - response for this stub, can be a string, JSON, object, path to file [required]
 
-*file (true/false)* - if it's true, and response is path to file, stub server return response file data with correct mime type.
+  - *file (true/false)* - if it's true, and response is path to file, stub server return response file data with correct mime type.
 
-*strictData (if method is 'get' ignored, default false)* - if true stub server select response with most appropriate data
+  - *strictData (if method is 'get' ignored, default false)* - if true stub server select response with most appropriate data
 
-*data* - response data in object format
+  - *data* - response data in object format
 
-*headers (array)* - add this headers to response
+  - *headers (array)* - add this headers to response
 
 #Contributing
 
