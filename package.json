@@ -1,6 +1,6 @@
 {
   "name": "stub-server",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Stub server which do response depends on json configuration file",
   "main": "index.js",
   "directories": {
